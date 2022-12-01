@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+//import './App.css';
+import api from "./api";
+import { Component} from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Navbar from "./Navbar";
+import Users from "./Users";
+import Posts from "./Posts";
+
+class App extends Component{
+
+  state={
+    users:[],
+  }
+  
+
+  async componentDidMount(){
+    const response = await api.get('users');
+    this.setState({ users: response.data })
+  }
+
+  render(){
+    
+    const {users} = this.state;
+
+    return(
+      <Router>
+        <div>
+          <Navbar /* name={this.state.name} *//>
+          <div className="container mx-auto max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <Routes>
+              <Route path="/" element={<Users users={users}/>}/>
+              <Route path="posts" element={<Posts />}/>
+            </Routes>
+          </div>
+        </div>
+      </Router>
+    );
+  };
+};
 
 export default App;
